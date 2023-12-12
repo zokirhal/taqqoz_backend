@@ -4,7 +4,7 @@ services:
   postgres-db:
     restart: always
     container_name: postgres-db
-    image: postgres:13.1
+    image: postgres:16.1
     hostname: postgres-db
     ports:
       - 127.0.0.1:5432:5432
