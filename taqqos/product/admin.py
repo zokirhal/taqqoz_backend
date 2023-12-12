@@ -56,9 +56,6 @@ class ProductAdmin(admin.ModelAdmin):
         "category",
         "brand",
         "is_popular",
-        "in_sale",
-        "has_credit",
-        "has_delivery",
         "file_tag"
     )
     list_display_links = ["id"]
@@ -66,9 +63,6 @@ class ProductAdmin(admin.ModelAdmin):
         "brand",
         "category",
         "is_popular",
-        "in_sale",
-        "has_credit",
-        "has_delivery",
         "created_at"
     ]
     ordering = ("-updated_at",)

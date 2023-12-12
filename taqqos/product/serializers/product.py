@@ -76,6 +76,7 @@ class ProductPriceSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
+    photo = FileSerializer()
 
     class Meta:
         model = Product
@@ -86,7 +87,11 @@ class ProductSerializer(serializers.ModelSerializer):
             "brand",
             "photo",
             "is_popular",
-            "in_sale",
+            "views",
+            "rate",
+            "review_count",
+            "min_price",
+            "price_count",
             "has_credit",
             "has_delivery",
             "description"

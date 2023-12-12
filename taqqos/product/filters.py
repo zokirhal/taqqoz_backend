@@ -17,9 +17,6 @@ class ProductFilter(django_filters.FilterSet):
             "category",
             "brand",
             "is_popular",
-            "in_sale",
-            "has_credit",
-            "has_delivery",
         )
 
 

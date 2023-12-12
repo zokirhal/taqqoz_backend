@@ -141,9 +141,7 @@ class Product(BaseDateModel):
         File, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("фото")
     )
     is_popular = models.BooleanField(_("популярен"), default=False)
-    in_sale = models.BooleanField(_("в продаже"), default=True)
-    has_credit = models.BooleanField(_("есть кредит"), default=False)
-    has_delivery = models.BooleanField(_("есть доставка"), default=False)
+    views = models.PositiveIntegerField(_("Просмотры"), default=0)
     description_uz = RichTextUploadingField(_("описание uzb"))
     description_ru = RichTextUploadingField(_("описание rus"))
 
@@ -153,6 +151,38 @@ class Product(BaseDateModel):
 
     def __str__(self):
         return self.name_ru
+
+    @property
+    def rate(self):
+        reviews = self.reviews.filter(rate__gt=0)
+        count = reviews.count()
+        if count > 0:
+            return round(sum([review.rate for review in reviews]) / count, 1)
+        return 0
+
+    @property
+    def review_count(self):
+        return self.reviews.filter(rate__gt=0).count()
+
+    @property
+    def min_price(self):
+        return min(
+            self.product_prices.all().values_list(
+                "price_amount", flat=True
+            ), default=None
+        )
+
+    @property
+    def price_count(self):
+        return self.product_prices.all().count()
+
+    @property
+    def has_credit(self):
+        return self.product_prices.filter(has_credit=True).exists()
+
+    @property
+    def has_delivery(self):
+        return self.product_prices.filter(has_delivery=True).exists()
 
 
 class ProductImage(models.Model):
