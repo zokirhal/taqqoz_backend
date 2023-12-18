@@ -46,7 +46,7 @@ class Category(MPTTModel):
         related_name="children",
         verbose_name=_("родитель")
     )
-    brands = TreeManyToManyField(Brand, related_name="categories", verbose_name=_("бренды"))
+    brands = TreeManyToManyField(Brand, related_name="categories", verbose_name=_("бренды"), blank=True)
     order_number = models.PositiveIntegerField(_("порядковый номер"), null=True, blank=True)
 
     class Meta:
