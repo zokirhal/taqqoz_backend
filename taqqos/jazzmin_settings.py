@@ -143,9 +143,9 @@ JAZZMIN_SETTINGS = {
     # - vertical_tabs
     # - collapsible
     # - carousel
-    "changeform_format": "collapsible",
+    "changeform_format": "horizontal_tabs",
     # override change forms on a per modeladmin basis
-    "changeform_format_overrides": {"account.carousel": "collapsible", "geo.Region": "vertical_tabs", "product.Product": "carousel"},
+    "changeform_format_overrides": {},
     # Add a language dropdown into the admin
     "language_chooser": False,
 }
