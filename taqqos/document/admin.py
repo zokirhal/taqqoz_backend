@@ -16,7 +16,7 @@ class FileAdmin(admin.ModelAdmin):
     readonly_fields = ["thumbnail", "file_type"]
 
     def file_tag(self, obj: File) -> Any:
-        if obj.file:
+        if obj.thumbnail:
             return mark_safe(
                 '<img src="{}" height="50"/>'.format(obj.thumbnail.url)
             )
