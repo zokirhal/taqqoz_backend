@@ -128,7 +128,7 @@ USE_TZ = False
 LANGUAGES = (
     ("ru", "Russian"),
     ("uz", "Uzbek"),
-    ("en", "English")
+    # ("en", "English")
 )
 
 PARLER_DEFAULT_LANGUAGE_CODE = 'ru'
@@ -137,7 +137,7 @@ PARLER_LANGUAGES = {
     None: (
         {'code': 'uz', },
         {'code': 'ru', },
-        {'code': 'en', },
+        # {'code': 'en', },
     ),
     'default': {
         'fallback': 'ru',
