@@ -12,7 +12,7 @@ def phone_auth(phone_number: str) -> bool:
         user, created = User.objects.get_or_create(
             phone_number=phone_number,
             defaults=dict(
-                is_active=False,
+                is_active=True,
             ))
         send_sms_verification(
             user,
