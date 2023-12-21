@@ -9,7 +9,11 @@ from taqqos.core.utils import send_sms_verification
 
 def phone_auth(phone_number: str) -> bool:
     try:
-        user = User.objects.get(phone_number=phone_number)
+        user, created = User.objects.get_or_create(
+            phone_number=phone_number,
+            defaults=dict(
+                is_active=False,
+            ))
         send_sms_verification(
             user,
             phone_number,
@@ -26,6 +30,7 @@ def phone_verify(user: User) -> dict:
     if not user.is_demo:
         user.sms_code = ""
     user.last_login = timezone.now()
+    user.is_active = True
     user.save()
     return {
         'refresh': str(refresh),

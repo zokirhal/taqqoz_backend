@@ -6,12 +6,11 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 # Project
 from taqqos.account.views.auth import PhoneAuthView
-from taqqos.account.views.register import RegisterView
 from taqqos.account.views.user import UserView
 
 router = DefaultRouter()
 router.register('auth', PhoneAuthView, 'auth')
-router.register('register', RegisterView, 'register')
+# router.register('register', RegisterView, 'register')
 router.register('user', UserView, 'user')
 
 urlpatterns = [

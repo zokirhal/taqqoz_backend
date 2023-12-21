@@ -12,11 +12,6 @@ from taqqos.core.serializers import CustomPhoneNumberField
 class PhoneSerializer(serializers.Serializer):
     phone_number = CustomPhoneNumberField(required=True)
 
-    def validate_phone_number(self, phone_number):
-        if not User.objects.filter(phone_number=phone_number, is_active=True).exists():
-            raise serializers.ValidationError(_("User not found"))
-        return phone_number
-
 
 class PhoneVerifySerializer(serializers.Serializer):
     phone_number = CustomPhoneNumberField(required=True)
@@ -29,7 +24,6 @@ class PhoneVerifySerializer(serializers.Serializer):
         user = self.user = User.objects.filter(
             phone_number=phone_number,
             sms_code=sms_code,
-            is_active=True
         ).first()
 
         if not user:
