@@ -54,12 +54,15 @@ class ProductVideoReviewSerializer(serializers.ModelSerializer):
 
 
 class ProductPriceSerializer(serializers.ModelSerializer):
+    photo = FileSerializer()
+
     class Meta:
         model = ProductPrice
         fields = (
             "id",
             "name",
             "price_amount",
+            "photo",
             "description",
             "feature",
             "has_credit",

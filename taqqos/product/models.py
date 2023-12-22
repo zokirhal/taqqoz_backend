@@ -263,6 +263,13 @@ class ProductPrice(BaseDateModel):
     price_amount = models.CharField(_("сумма цены"), max_length=256)
     description = models.TextField(_("описание"), null=True, blank=True)
     feature = models.TextField(_("характеристика"), null=True, blank=True)
+    photo = models.ForeignKey(
+        File,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name=_("фото")
+    )
 
     has_credit = models.BooleanField(_("есть кредит"), default=False)
     credit_monthly_amount = models.CharField(_("ежемесячная сумма кредита"), null=True, blank=True)
