@@ -33,7 +33,7 @@ def create_video_preview(instance: File):
     instance.thumbnail.save('preview.jpeg', ContentFile(file))
 
 
-def create_thumbnail_image(instance, size=(150, 150)):
+def create_thumbnail_image(instance, size=(300, 300)):
     image = Image.open(instance.file)
     image.thumbnail(size, Image.ANTIALIAS)
     thumb_name, thumb_extension = os.path.splitext(instance.file.name)
