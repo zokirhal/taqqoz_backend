@@ -328,3 +328,36 @@ class Favourite(BaseDateModel):
 
     def __str__(self):
         return _(f"{self.user.full_name} избранное {self.product.name_ru}")
+
+
+class Slider(models.Model):
+    name_uz = models.CharField(_("название uzb"), max_length=256, null=True, blank=True)
+    name_ru = models.CharField(_("название rus"), max_length=256, null=True, blank=True)
+    text_uz = models.TextField(_("текст uzb"), null=True, blank=True)
+    text_ru = models.TextField(_("текст rus"), null=True, blank=True)
+    image = models.ForeignKey(
+        File,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        verbose_name="фото"
+    )
+    order_number = models.PositiveIntegerField(_("порядковый номер"), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("Слидер")
+        verbose_name_plural = _("Слидеры")
+
+
+class Seller(models.Model):
+    image = models.ForeignKey(
+        File,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        verbose_name="фото"
+    )
+    order_number = models.PositiveIntegerField(_("порядковый номер"), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("Продавц")
+        verbose_name_plural = _("Продавцы")
+

@@ -1,6 +1,6 @@
 import django_filters
 
-from taqqos.product.models import Product, Category, Brand, Review
+from taqqos.product.models import Product, Category, Brand, Review, ProductPrice
 
 
 class ProductFilter(django_filters.FilterSet):
@@ -17,6 +17,14 @@ class ProductFilter(django_filters.FilterSet):
             "category",
             "brand",
             "is_popular",
+        )
+
+
+class ProductPriceFilter(django_filters.FilterSet):
+    class Meta:
+        model = ProductPrice
+        fields = (
+            "product",
         )
 
 

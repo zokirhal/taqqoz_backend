@@ -231,5 +231,15 @@ ADMIN_ORDERING = (
     ("account", ("User", )),
     ("document", ("File", )),
     ("auth", ("Group",)),
-    ("product", ("Category", "Brand", "Attribute", "Product", "ProductPrice", "Review", "Favourite")),
+    ("product", (
+        "Category",
+        "Brand",
+        "Attribute",
+        "Product",
+        "ProductPrice",
+        "Review",
+        "Favourite",
+        "Slider",
+        "Seller")
+     ),
 )

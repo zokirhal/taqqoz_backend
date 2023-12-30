@@ -17,7 +17,7 @@ from taqqos.product.models import (
     ProductImage,
     Review,
     ReviewFile,
-    Favourite,
+    Favourite, Slider, Seller,
 )
 
 
@@ -194,4 +194,21 @@ class FavouriteAdmin(admin.ModelAdmin):
         "user",
         "product",
         "created_at"
+    )
+
+
+@admin.register(Slider)
+class SliderAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "name_uz",
+        "image",
+    )
+
+
+@admin.register(Seller)
+class SellerAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "image",
     )
