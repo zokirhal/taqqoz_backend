@@ -39,15 +39,3 @@ class PhoneAuthView(GenericViewSet):
         serializer.is_valid(raise_exception=True)
         res = phone_verify(serializer.user)
         return Response(res)
-
-    @action(['POST'], detail=False, serializer_class=LogoutSerializer)
-    def logout(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        try:
-            refresh_token = request.data["refresh_token"]
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response(status=status.HTTP_205_RESET_CONTENT)
-        except TokenError as e:
-            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)

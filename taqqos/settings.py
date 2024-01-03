@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'parler',
     'ckeditor_uploader',
     'ckeditor',
+    'rest_framework_simplejwt.token_blacklist',
 
     # django apps
     'taqqos.account',
@@ -213,8 +214,8 @@ SMS_CODE_EXPIRE = 60
 SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=5),
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
