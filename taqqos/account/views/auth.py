@@ -12,6 +12,7 @@ from taqqos.account.services.auth import phone_auth, phone_verify
 
 
 class PhoneAuthView(GenericViewSet):
+    authentication_classes = [JWTAuthentication]
 
     def get_permissions(self):
         if self.action == "logout":
@@ -20,7 +21,7 @@ class PhoneAuthView(GenericViewSet):
 
     def perform_authentication(self, request):
         if self.action == "logout":
-            return [JWTAuthentication]
+            return super().get_authenticators()
         return []
 
     @action(methods=["POST"], detail=False, serializer_class=PhoneSerializer)
