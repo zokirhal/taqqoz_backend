@@ -4,6 +4,7 @@ from rest_framework import serializers
 from taqqos.document.serializers import FileSerializer
 from taqqos.product.models import Product, ProductImage, ProductAttribute, ProductFeature, ProductVideoReview, \
     ProductPrice
+from taqqos.product.serializers.attribute import OptionSerializer, AttributeMiniSerializer
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -18,14 +19,15 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 
 class ProductAttributeSerializer(serializers.ModelSerializer):
+    attribute = AttributeMiniSerializer()
+    option = OptionSerializer()
+
     class Meta:
         model = ProductAttribute
         fields = (
             "id",
             "attribute",
-            "text_value",
-            "toggle_value",
-            "options"
+            "option"
         )
 
 
@@ -105,7 +107,7 @@ class ProductSerializer(serializers.ModelSerializer):
         action = self.context["view"].action
         if action == "retrieve":
             self.fields["images"] = ProductImageSerializer(many=True)
-            self.fields["features"] = ProductFeatureSerializer(many=True)
+            self.fields["attributes"] = ProductAttributeSerializer(many=True)
             self.fields["video_reviews"] = ProductVideoReviewSerializer(many=True)
             self.fields["product_prices"] = ProductPriceSerializer(many=True)
 

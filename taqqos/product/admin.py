@@ -48,6 +48,15 @@ class ProductImageeAdmin(admin.StackedInline):
     extra = 1
 
 
+class ProductAttributeAdmin(admin.StackedInline):
+    model = ProductAttribute
+    list_display = (
+        "id",
+        "attribute",
+    )
+    extra = 1
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
@@ -70,8 +79,9 @@ class ProductAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     inlines = [
         ProductImageeAdmin,
-        ProductFeatureAdmin,
-        ProductVideoReviewAdmin
+        ProductAttributeAdmin,
+        ProductVideoReviewAdmin,
+        # ProductFeatureAdmin,
     ]
 
     def file_tag(self, obj: Product) -> Any:
@@ -101,10 +111,9 @@ class AttributeAdmin(admin.ModelAdmin):
         "code",
         "type",
         "is_required",
-        "can_join",
     )
     list_display_links = ["id"]
-    list_filter = ["type", "categories", "is_required", "can_join"]
+    list_filter = ["type", "categories", "is_required", ]
     search_fields = ["name_uz", "name_ru"]
     inlines = [
         OptionAdmin,

@@ -82,10 +82,9 @@ class Attribute(models.Model):
     )
     name_uz = models.CharField(_("название uzb"), max_length=200)
     name_ru = models.CharField(_("название rus"), max_length=200)
-    code = models.CharField(_("код"), max_length=64)
+    code = models.CharField(_("код"), max_length=64, unique=True)
     type = models.CharField(_("тип"), max_length=64, choices=TYPES)
-    is_required = models.BooleanField(_("требуется"))
-    can_join = models.BooleanField(_("могу присоединиться"), default=False)
+    is_required = models.BooleanField(_("требуется"), default=False)
     order_number = models.PositiveIntegerField(_("порядковый номер"), null=True, blank=True)
     categories = TreeManyToManyField(Category, verbose_name=_("категории"), related_name="attributes", blank=True)
 
@@ -107,13 +106,14 @@ class Option(models.Model):
     name_uz = models.CharField(_("название uzb"), max_length=200)
     name_ru = models.CharField(_("название rus"), max_length=200)
     code = models.CharField(_("код"), max_length=64)
-    label = models.TextField(_("метка"), null=True, blank=True)
+    value = models.DecimalField(null=True, blank=True, decimal_places=2, max_digits=18)
 
     order_number = models.PositiveIntegerField(_("порядковый номер"), null=True, blank=True)
 
     class Meta:
         verbose_name = _("параметр")
         verbose_name_plural = _("параметры")
+        unique_together = ("attribute", "code")
 
     def __str__(self):
         return self.name_ru
@@ -211,10 +211,12 @@ class ProductAttribute(models.Model):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="attributes", verbose_name=_("продукт")
     )
-    text_value = models.CharField(_("текстовое ценить"), max_length=128, blank=True, null=True)
-    toggle_value = models.BooleanField(_("переключить ценить"), null=True, blank=True)
-    options = models.ManyToManyField(
-        Option, blank=True, related_name="product_attributes", verbose_name=_("параметры")
+    option = models.ForeignKey(
+        Option,
+        on_delete=models.SET_NULL,
+        blank=True, null=True,
+        related_name="product_attributes",
+        verbose_name=_("параметр")
     )
 
     class Meta:

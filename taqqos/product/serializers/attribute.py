@@ -13,7 +13,7 @@ class OptionSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "code",
-            "label"
+            "value"
         )
 
     def get_name(self, instance):
@@ -32,8 +32,24 @@ class AttributeSerializer(serializers.ModelSerializer):
             "code",
             "type",
             "is_required",
-            "can_join",
             "options"
+        )
+
+    def get_name(self, instance):
+        return getattr(instance, f"name_{get_language()}")
+
+
+class AttributeMiniSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Attribute
+        fields = (
+            "id",
+            "name",
+            "code",
+            "type",
+            "is_required",
         )
 
     def get_name(self, instance):
