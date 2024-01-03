@@ -60,3 +60,6 @@ class File(BaseDateModel):
     @property
     def file_url(self):
         return self.file.url if self.file else None
+
+    def __str__(self):
+        return self.name if self.name else self.file.name

@@ -201,7 +201,6 @@ class FavouriteAdmin(admin.ModelAdmin):
 class SliderAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "name_uz",
         "image",
     )
 

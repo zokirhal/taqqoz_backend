@@ -3,6 +3,7 @@ from typing import List
 from django.utils.translation import get_language
 from rest_framework import serializers
 
+from taqqos.document.serializers import FileSerializer
 from taqqos.product.models import Category
 from taqqos.product.serializers.attribute import AttributeSerializer
 from taqqos.product.serializers.brand import BrandSerializer
@@ -13,6 +14,7 @@ class CategorySerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField(
         read_only=True, method_name="get_child_categories"
     )
+    icon = FileSerializer()
     brands = BrandSerializer(many=True)
 
     class Meta:
@@ -20,6 +22,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "icon",
             "brands",
             "children"
         )

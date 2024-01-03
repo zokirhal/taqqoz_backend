@@ -46,6 +46,7 @@ class Category(MPTTModel):
         related_name="children",
         verbose_name=_("родитель")
     )
+    icon = models.ForeignKey(File, on_delete=models.SET_NULL, null=True, blank=True)
     brands = TreeManyToManyField(Brand, related_name="categories", verbose_name=_("бренды"), blank=True)
     order_number = models.PositiveIntegerField(_("порядковый номер"), null=True, blank=True)
 
@@ -331,15 +332,18 @@ class Favourite(BaseDateModel):
 
 
 class Slider(models.Model):
-    name_uz = models.CharField(_("название uzb"), max_length=256, null=True, blank=True)
-    name_ru = models.CharField(_("название rus"), max_length=256, null=True, blank=True)
-    text_uz = models.TextField(_("текст uzb"), null=True, blank=True)
-    text_ru = models.TextField(_("текст rus"), null=True, blank=True)
     image = models.ForeignKey(
         File,
         on_delete=models.SET_NULL,
         null=True, blank=True,
         verbose_name="фото"
+    )
+    image_mobile = models.ForeignKey(
+        File,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name="sliders_mobile",
+        verbose_name="фото для мобиль"
     )
     order_number = models.PositiveIntegerField(_("порядковый номер"), null=True, blank=True)
 
