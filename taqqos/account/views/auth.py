@@ -3,6 +3,7 @@ from rest_framework import status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 
@@ -19,7 +20,7 @@ class PhoneAuthView(GenericViewSet):
 
     def perform_authentication(self, request):
         if self.action == "logout":
-            return super().get_authenticators()
+            return [JWTAuthentication]
         return []
 
     @action(methods=["POST"], detail=False, serializer_class=PhoneSerializer)
