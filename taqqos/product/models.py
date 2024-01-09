@@ -263,7 +263,7 @@ class ProductPrice(BaseDateModel):
     )
 
     name = models.CharField(_("название"), max_length=512)
-    price_amount = models.CharField(_("сумма цены"), max_length=256)
+    price_amount = models.DecimalField(_("сумма цены"), decimal_places=2, max_digits=18)
     description = models.TextField(_("описание"), null=True, blank=True)
     feature = models.TextField(_("характеристика"), null=True, blank=True)
     photo = models.ForeignKey(

@@ -1,4 +1,5 @@
 import django_filters
+from django.db.models import Q
 
 from taqqos.product.models import Product, Category, Brand, Review, ProductPrice
 
@@ -10,6 +11,11 @@ class ProductFilter(django_filters.FilterSet):
     brand = django_filters.ModelMultipleChoiceFilter(
         queryset=Brand.objects.all()
     )
+    min_price = django_filters.NumberFilter(method="get_min_price_filter")
+    max_price = django_filters.NumberFilter(method="get_max_price_filter")
+
+    has_credit = django_filters.BooleanFilter(method="get_has_credit_filter")
+    has_delivery = django_filters.BooleanFilter(method="get_has_delivery_filter")
 
     class Meta:
         model = Product
@@ -17,7 +23,27 @@ class ProductFilter(django_filters.FilterSet):
             "category",
             "brand",
             "is_popular",
+            "min_price",
+            "max_price",
+            "has_credit",
+            "has_delivery"
         )
+
+    def get_min_price_filter(self, queryset, name, value, *args, **kwargs):
+        product_prices = ProductPrice.objects.filter(price_amount__gte=value)
+        return queryset.filter(product_prices__in=product_prices)
+
+    def get_max_price_filter(self, queryset, name, value, *args, **kwargs):
+        product_prices = ProductPrice.objects.filter(price_amount__lte=value)
+        return queryset.filter(product_prices__in=product_prices)
+
+    def get_has_credit_filter(self, queryset, name, value, *args, **kwargs):
+        product_prices = ProductPrice.objects.filter(has_credit=value)
+        return queryset.filter(product_prices__in=product_prices)
+
+    def get_has_delivery_filter(self, queryset, name, value, *args, **kwargs):
+        product_prices = ProductPrice.objects.filter(has_delivery=value)
+        return queryset.filter(product_prices__in=product_prices)
 
 
 class ProductPriceFilter(django_filters.FilterSet):
