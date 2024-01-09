@@ -32,7 +32,7 @@ class ProductViewSet(ReadOnlyModelViewSet):
                     p_atts = ProductAttribute.objects.filter(option=option)
                 product_attributes.extend(p_atts)
         qs = self.filter_queryset(self.queryset)
-        if product_attributes:
+        if query_params:
             qs = qs.filter(attributes__in=product_attributes).distinct()
         return qs
 
