@@ -14,7 +14,8 @@ class ProductViewSet(ReadOnlyModelViewSet):
 
     def get_queryset(self):
         query_params = dict(self.request.query_params)
-        for field in self.filterset_class.Meta.fields:
+        excluding_fields = self.filterset_class.Meta.fields + ("page", "page_size")
+        for field in excluding_fields:
             query_params.pop(field, "")
         product_attributes = []
         for key, val in query_params.items():
