@@ -20,6 +20,8 @@ class ProductViewSet(ReadOnlyModelViewSet):
         product_attributes = []
         for key, val in query_params.items():
             key = key.split("_")
+            if len(key) != 2:
+                continue
             option = Option.objects.filter(Q(attribute__code=key[0]) & Q(code=key[1])).first()
             p_atts = []
             if option:
