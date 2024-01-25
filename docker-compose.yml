@@ -35,6 +35,17 @@ services:
       - static_volume:/backend/static
       - media_volume:/backend/media
 
+  celery:
+    restart: always
+    container_name: taqqoz_celery
+    build:
+      context: ./
+      dockerfile: celery.Dockerfile
+    env_file:
+      - .env
+    networks:
+      - backend
+
 networks:
   backend:
 
