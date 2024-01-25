@@ -116,3 +116,19 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_description(self, instance: Product) -> str:
         return getattr(instance, f"description_{get_language()}")
+
+
+class ProductPriceCreateSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=512)
+    price_amount = serializers.DecimalField(max_digits=18, decimal_places=2,)
+    photo = serializers.CharField(required=False, allow_null=True)
+    description = serializers.CharField(required=False, allow_null=True)
+    feature = serializers.CharField(required=False, allow_null=True)
+    has_credit = serializers.BooleanField(default=False, required=False, allow_null=True)
+    credit_monthly_amount = serializers.CharField(required=False, allow_null=True)
+    has_delivery = serializers.BooleanField(default=False, required=False, allow_null=True)
+    delivery_info = serializers.CharField(required=False, allow_null=True)
+    address = serializers.CharField(required=False, allow_null=True)
+    phone_number = serializers.CharField(required=False, allow_null=True)
+    website = serializers.CharField(required=True)
+    website_link = serializers.CharField(required=True)

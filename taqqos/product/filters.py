@@ -50,7 +50,7 @@ class ProductPriceFilter(django_filters.FilterSet):
     class Meta:
         model = ProductPrice
         fields = (
-            "product",
+            "products",
         )
 
 

@@ -124,7 +124,6 @@ class AttributeAdmin(admin.ModelAdmin):
 class ProductPriceAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "product",
         "name",
         "price_amount",
         "has_credit",

@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
 
     # installed apps
     'drf_yasg',
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'ckeditor',
     'rest_framework_simplejwt.token_blacklist',
+    'django_celery_results',
 
     # django apps
     'taqqos.account',
@@ -244,3 +246,14 @@ ADMIN_ORDERING = (
         "Seller")
      ),
 )
+
+REDIS_URL = env("REDIS_URL", default="redis://localhost:6379/0")
+
+CELERY_RESULT_BACKEND = "django-db"
+
+CELERY_BROKER_URL = REDIS_URL
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_EAGER = True
+CELERY_ALWAYS_EAGER = True

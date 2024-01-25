@@ -1,4 +1,5 @@
 # django
+from autoslug import AutoSlugField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext as _
@@ -255,11 +256,11 @@ class ProductVideoReview(models.Model):
 
 
 class ProductPrice(BaseDateModel):
-    product = models.ForeignKey(
+    products = models.ManyToManyField(
         Product,
-        on_delete=models.CASCADE,
         related_name="product_prices",
-        verbose_name=_("продукт")
+        verbose_name=_("продукты"),
+        blank=True
     )
 
     name = models.CharField(_("название"), max_length=512)
@@ -289,6 +290,7 @@ class ProductPrice(BaseDateModel):
     class Meta:
         verbose_name = _("цены на продукцию")
         verbose_name_plural = _("цены на продукцию")
+        unique_together = ("name", "website")
 
 
 class Review(BaseDateModel):

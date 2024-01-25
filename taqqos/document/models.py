@@ -15,7 +15,7 @@ from rest_framework.serializers import ValidationError
 from taqqos.core.models import BaseDateModel
 
 FILE_TYPES = {
-    r'^(jpg|jpeg|png|gif|JPG)$': 'image',
+    r'^(jpg|jpeg|png|gif|JPG|webp)$': 'image',
     r'^(pdf)$': 'document',
     r'^(mp4)$': 'video'
 }

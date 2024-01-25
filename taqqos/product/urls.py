@@ -16,6 +16,7 @@ urlpatterns = [
     path("product/<int:pk>/", product.ProductViewSet.as_view({"get": "retrieve", }), name="product"),
     path("product/price/", product.ProductPriceViewSet.as_view({"get": "list", }), name="product-price"),
     path("product/price/<int:pk>/", product.ProductPriceViewSet.as_view({"get": "retrieve", }), name="product-price"),
+    path("product/price/create/", product.ProductPriceCreateView.as_view(), name="product-price-create"),
     path("slider/", sliders.SliderView.as_view(), name="slider"),
     path("seller/", sliders.SellerView.as_view(), name="seller"),
     path('', include(router.urls))

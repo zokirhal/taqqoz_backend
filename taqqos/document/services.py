@@ -49,6 +49,8 @@ def create_thumbnail_image(instance, size=(300, 300)):
         FTYPE = "GIF"
     elif thumb_extension == ".png":
         FTYPE = "PNG"
+    elif thumb_extension in [".webp", ".WEBP"]:
+        FTYPE = "WEBP"
 
     temp_thumb = io.BytesIO()
     image.save(temp_thumb, FTYPE)
