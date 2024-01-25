@@ -35,6 +35,17 @@ services:
       - static_volume:/backend/static
       - media_volume:/backend/media
 
+  redis-db:
+    restart: always
+    image: redis:7
+    hostname: redis-db
+    volumes:
+      - market_redis_data:/data
+    ports:
+      - 127.0.0.1:6378:6379
+    networks:
+      - backend
+
   celery:
     restart: always
     container_name: taqqoz_celery
@@ -53,3 +64,4 @@ volumes:
   postgres_data:
   static_volume:
   media_volume:
+  market_redis_data:
