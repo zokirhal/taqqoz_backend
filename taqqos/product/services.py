@@ -24,6 +24,7 @@ def create_product_price(
                 **data
             )
         )
+        print(photo, "SSS")
         if photo:
             r = requests.get(photo)
             if r.status_code == 200:
