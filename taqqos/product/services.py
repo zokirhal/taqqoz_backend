@@ -28,6 +28,8 @@ def create_product_price(
             r = requests.get(photo)
             if r.status_code == 200:
                 filename = photo.split('/')[-1]
+                if website == "Mediapark":
+                    filename = filename.split("&")[0]
                 file = File(
                     name=filename,
                     file_type=File.IMAGE

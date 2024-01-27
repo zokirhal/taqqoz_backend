@@ -123,7 +123,7 @@ class ProductPriceCreateSerializer(serializers.Serializer):
     price_amount = serializers.DecimalField(max_digits=18, decimal_places=2,)
     photo = serializers.CharField(required=False, allow_null=True)
     description = serializers.CharField(required=False, allow_null=True)
-    feature = serializers.CharField(required=False, allow_null=True)
+    features = serializers.JSONField(required=False, allow_null=True)
     has_credit = serializers.BooleanField(default=False, required=False, allow_null=True)
     credit_monthly_amount = serializers.CharField(required=False, allow_null=True)
     has_delivery = serializers.BooleanField(default=False, required=False, allow_null=True)
