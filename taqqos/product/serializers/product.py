@@ -66,7 +66,7 @@ class ProductPriceSerializer(serializers.ModelSerializer):
             "price_amount",
             "photo",
             "description",
-            "feature",
+            "features",
             "has_credit",
             "credit_monthly_amount",
             "has_delivery",
