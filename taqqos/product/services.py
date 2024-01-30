@@ -17,8 +17,6 @@ def create_product_price(
         name = data.pop("name")
         website = data.pop("website")
         photo = data.pop("photo")
-        print(photo)
-        print(website)
         product_price, _ = ProductPrice.objects.update_or_create(
             name=name,
             website=website,
@@ -28,12 +26,10 @@ def create_product_price(
         )
         if photo:
             r = requests.get(photo)
-            print(r.status_code)
             if r.status_code == 200:
                 filename = photo.split('/')[-1]
                 if website == "Mediapark":
                     filename = filename.split("&")[0]
-                    print(filename)
                 file = File(
                     name=filename,
                     file_type=File.IMAGE
