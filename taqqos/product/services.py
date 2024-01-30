@@ -18,6 +18,7 @@ def create_product_price(
         website = data.pop("website")
         photo = data.pop("photo")
         print(photo)
+        print(website)
         product_price, _ = ProductPrice.objects.update_or_create(
             name=name,
             website=website,
