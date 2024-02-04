@@ -135,7 +135,7 @@ class ProductPriceAdmin(admin.ModelAdmin):
     )
     list_display_links = ["id"]
     list_filter = ["has_credit", "has_delivery", "website"]
-    search_fields = ["name", "product__name_uz", "product__name_ru"]
+    search_fields = ["name"]
 
     def file_tag(self, obj: Product) -> Any:
         if obj.photo:
