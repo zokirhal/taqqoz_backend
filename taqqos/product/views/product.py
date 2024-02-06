@@ -15,27 +15,29 @@ class ProductViewSet(ReadOnlyModelViewSet):
     serializer_class = ProductSerializer
     filterset_class = ProductFilter
     search_fields = ("name_uz", "name_ru")
+    ordering_fields = "__all__"
 
     def get_queryset(self):
         query_params = dict(self.request.query_params)
-        excluding_fields = self.filterset_class.Meta.fields + ("page", "page_size")
+        excluding_fields = self.filterset_class.Meta.fields + ("page", "page_size", "ordering")
         for field in excluding_fields:
             query_params.pop(field, "")
         product_attributes = []
         for key, val in query_params.items():
-            key = key.split("_")
-            if len(key) != 2:
+            val = val[0]
+            attribute = Attribute.objects.filter(code=key).first()
+            if not attribute:
                 continue
-            option = Option.objects.filter(Q(attribute__code=key[0]) & Q(code=key[1])).first()
-            p_atts = []
-            if option:
-                if option.attribute.type == Attribute.TEXT:
-                    if option.code == "from":
-                        p_atts = ProductAttribute.objects.filter(attribute=option.attribute, option__vaue__gte=val)
-                    if option.code == "to":
-                        p_atts = ProductAttribute.objects.filter(attribute=option.attribute, option__vaue__lte=val)
-                else:
-                    p_atts = ProductAttribute.objects.filter(option=option)
+            if attribute.type == Attribute.TEXT:
+                min_val, max_val = val.split(",")
+                p_atts = ProductAttribute.objects.filter(
+                    attribute=attribute
+                ).filter(
+                    Q(option__value__gte=min_val) & Q(option__value__lte=max_val)
+                )
+            else:
+                p_atts = ProductAttribute.objects.filter(attribute=attribute, option__value=val)
+            if p_atts:
                 product_attributes.extend(p_atts)
         qs = self.filter_queryset(self.queryset)
         if query_params:
