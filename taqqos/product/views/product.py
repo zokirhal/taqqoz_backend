@@ -36,7 +36,8 @@ class ProductViewSet(ReadOnlyModelViewSet):
                     Q(option__value__gte=min_val) & Q(option__value__lte=max_val)
                 )
             else:
-                p_atts = ProductAttribute.objects.filter(attribute=attribute, option__value=val)
+                values = val.split(",") if "," in val else [val]
+                p_atts = ProductAttribute.objects.filter(attribute=attribute, option__value__in=values)
             if p_atts:
                 product_attributes.extend(p_atts)
         qs = self.filter_queryset(self.queryset)
