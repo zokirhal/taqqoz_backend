@@ -32,9 +32,15 @@ class ProductViewSet(ReadOnlyModelViewSet):
                 min_val, max_val = val.split(",")
                 p_atts = ProductAttribute.objects.filter(
                     attribute=attribute
-                ).filter(
-                    Q(option__value__gte=min_val) & Q(option__value__lte=max_val)
                 )
+                if max_val and min_val:
+                    p_atts = p_atts.filter(
+                        Q(option__value__gte=min_val) & Q(option__value__lte=max_val)
+                    )
+                if min_val:
+                    p_atts = p_atts.filter(option__value__gte=min_val)
+                if max_val:
+                    p_atts = p_atts.filter(option__value__lte=max_val)
             else:
                 values = val.split(",") if "," in val else [val]
                 p_atts = ProductAttribute.objects.filter(attribute=attribute, option__value__in=values)
