@@ -18,7 +18,7 @@ def phone_auth(phone_number: str) -> bool:
         send_sms_verification(
             user,
             phone_number,
-            _('Talklif dlya vhoda SMS-kod: %s')
+            _('Taqqoz dlya vhoda SMS-kod: %s')
         )
     except Exception as e:
         raise ValidationError({

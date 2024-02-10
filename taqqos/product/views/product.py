@@ -18,6 +18,7 @@ class ProductViewSet(ReadOnlyModelViewSet):
     ordering_fields = "__all__"
 
     def get_queryset(self):
+        qs = self.filter_queryset(self.queryset)
         query_params = dict(self.request.query_params)
         excluding_fields = self.filterset_class.Meta.fields + ("page", "page_size", "ordering")
         for field in excluding_fields:
@@ -46,7 +47,6 @@ class ProductViewSet(ReadOnlyModelViewSet):
                 p_atts = ProductAttribute.objects.filter(attribute=attribute, option__value__in=values)
             if p_atts:
                 product_attributes.extend(p_atts)
-        qs = self.filter_queryset(self.queryset)
         if query_params:
             qs = qs.filter(attributes__in=product_attributes).distinct()
         return qs

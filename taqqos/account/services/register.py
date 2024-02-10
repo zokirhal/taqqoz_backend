@@ -15,7 +15,7 @@ def phone_register(phone_number: str) -> dict:
                 is_active=False,
             )
         )
-        send_sms_verification(user, phone_number, _('Talklif dlya vhoda SMS-kod: %s'))
+        send_sms_verification(user, phone_number, _('Taqqoz dlya vhoda SMS-kod: %s'))
     except Exception as e:
         raise ValidationError({
             'non_field_errors': [e]

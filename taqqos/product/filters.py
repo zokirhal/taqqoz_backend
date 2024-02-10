@@ -1,5 +1,5 @@
 import django_filters
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from taqqos.product.models import Product, Category, Brand, Review, ProductPrice
 
@@ -16,6 +16,7 @@ class ProductFilter(django_filters.FilterSet):
 
     has_credit = django_filters.BooleanFilter(method="get_has_credit_filter")
     has_delivery = django_filters.BooleanFilter(method="get_has_delivery_filter")
+    is_popular = django_filters.BooleanFilter(method="get_has_is_popular_filter")
 
     class Meta:
         model = Product
@@ -44,6 +45,13 @@ class ProductFilter(django_filters.FilterSet):
     def get_has_delivery_filter(self, queryset, name, value, *args, **kwargs):
         product_prices = ProductPrice.objects.filter(has_delivery=value)
         return queryset.filter(product_prices__in=product_prices)
+
+    def get_has_is_popular_filter(self, queryset, name, value, *args, **kwargs):
+        queryset = queryset.annotate(
+            rate_counts=Count("reviews"),
+            favorite_counts=Count("favorites")
+        ).order_by("-rate_counts", "-views", "-favorite_counts")
+        return queryset
 
 
 class ProductPriceFilter(django_filters.FilterSet):
