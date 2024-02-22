@@ -1,7 +1,8 @@
 import requests
 from django.core.files.base import ContentFile
 from django.db import transaction
-from django.contrib.postgres.search import TrigramStrictWordSimilarity
+from django.contrib.postgres.search import TrigramStrictWordSimilarity, TrigramWordDistance
+from django.db.models import Q
 
 from taqqos.celery import app
 from taqqos.document.models import File
@@ -48,11 +49,14 @@ def create_product_price(
 
 def match_product_price():
     for p_price in ProductPrice.objects.all():
+        p_price.products.clear()
         products = Product.objects.annotate(
-            similarity=TrigramStrictWordSimilarity(
-                p_price.name, "name_ru")
-        ).filter(similarity__gt=0.8)
+            distance_ru=TrigramWordDistance(
+                p_price.name, "name_ru"),
+            distance_uz=TrigramWordDistance(
+                p_price.name, "name_uz")
+        ).filter(Q(distance_ru__lte=0.07) | Q(distance_uz__lte=0.07))
         if products:
             p_price.products.clear()
             p_price.products.add(*products)
-            p_price.save()
+        p_price.save()
