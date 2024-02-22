@@ -51,12 +51,14 @@ def match_product_price():
     for p_price in ProductPrice.objects.all():
         p_price.products.clear()
         products = Product.objects.annotate(
-            distance_ru=TrigramWordDistance(
+            similarity_ru=TrigramStrictWordSimilarity(
                 p_price.name, "name_ru"),
-            distance_uz=TrigramWordDistance(
+            similarity_uz=TrigramWordDistance(
                 p_price.name, "name_uz")
-        ).filter(Q(distance_ru__lte=0.07) | Q(distance_uz__lte=0.07))
+        ).filter(Q(similarity_ru__gte=0.7) | Q(similarity_uz__lte=0.7))
         if products:
+            print(p_price.name)
+            print(products.values_list("name_ru"))
             p_price.products.clear()
             p_price.products.add(*products)
         p_price.save()
