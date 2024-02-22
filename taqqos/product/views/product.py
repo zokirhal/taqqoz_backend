@@ -1,11 +1,13 @@
 from django.db.models import Q
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from taqqos.product.filters import ProductFilter, ProductPriceFilter
-from taqqos.product.models import Product, ProductPrice, ProductAttribute, Option, Attribute
+from taqqos.product.filters import ProductFilter, ProductPriceFilter, CustomOrderFilter
+from taqqos.product.models import Product, ProductPrice, ProductAttribute, Attribute
 from taqqos.product.serializers.product import ProductSerializer, ProductPriceSerializer, ProductPriceCreateSerializer
 from taqqos.product.services import create_product_price
 
@@ -13,13 +15,19 @@ from taqqos.product.services import create_product_price
 class ProductViewSet(ReadOnlyModelViewSet):
     queryset = Product.objects.all().order_by("-created_at")
     serializer_class = ProductSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        CustomOrderFilter
+    ]
     filterset_class = ProductFilter
     search_fields = ("name_uz", "name_ru")
-    ordering_fields = "__all__"
+    ordering_fields = ("price", "is_popular", "views", "id", "created_at")
+    ordering_case_insensitive_fields = ("price", "is_popular")
 
-    def get_queryset(self):
+
+def get_queryset(self):
         qs = self.filter_queryset(self.queryset)
-        print(qs)
         query_params = dict(self.request.query_params)
         excluding_fields = self.filterset_class.Meta.fields + ("page", "page_size", "ordering")
         for field in excluding_fields:
