@@ -2,13 +2,15 @@ from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.filters import SearchFilter
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from taqqos.product.filters import ProductFilter, ProductPriceFilter, CustomOrderFilter
 from taqqos.product.models import Product, ProductPrice, ProductAttribute, Attribute
-from taqqos.product.serializers.product import ProductSerializer, ProductPriceSerializer, ProductPriceCreateSerializer
+from taqqos.product.serializers.product import ProductSerializer, ProductPriceSerializer, ProductPriceCreateSerializer, \
+    ProductDetailSerializer
 from taqqos.product.services import create_product_price
 
 
@@ -25,8 +27,7 @@ class ProductViewSet(ReadOnlyModelViewSet):
     ordering_fields = ("price", "is_popular", "views", "id", "created_at")
     ordering_case_insensitive_fields = ("price", "is_popular")
 
-
-def get_queryset(self):
+    def get_queryset(self):
         qs = self.filter_queryset(self.queryset)
         query_params = dict(self.request.query_params)
         excluding_fields = self.filterset_class.Meta.fields + ("page", "page_size", "ordering")
@@ -59,6 +60,13 @@ def get_queryset(self):
         if product_attributes:
             qs = qs.filter(attributes__in=product_attributes).distinct()
         return qs
+
+
+class ProductDetailView(RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductDetailSerializer
+    lookup_field = "slug"
+    lookup_url_kwarg = "slug"
 
 
 class ProductPriceViewSet(ReadOnlyModelViewSet):

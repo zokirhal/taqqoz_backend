@@ -88,6 +88,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "slug",
             "category",
             "brand",
             "photo",
@@ -117,6 +118,45 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_description(self, instance: Product) -> str:
         return getattr(instance, f"description_{get_language()}")
 
+
+class ProductDetailSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    photo = FileSerializer()
+    images = ProductImageSerializer(many=True)
+    attributes = ProductAttributeSerializer(many=True)
+    video_reviews = ProductVideoReviewSerializer(many=True)
+    product_prices = ProductPriceSerializer(many=True)
+
+    class Meta:
+        model = Product
+        fields = (
+            "id",
+            "name",
+            "slug",
+            "category",
+            "brand",
+            "photo",
+            "is_popular",
+            "views",
+            "rate",
+            "review_count",
+            "min_price",
+            "price_count",
+            "has_credit",
+            "has_delivery",
+            "description",
+            "images",
+            "attributes",
+            "video_reviews",
+            "product_prices",
+        )
+
+    def get_name(self, instance: Product) -> str:
+        return getattr(instance, f"name_{get_language()}")
+
+    def get_description(self, instance: Product) -> str:
+        return getattr(instance, f"description_{get_language()}")
 
 class ProductPriceCreateSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=512)

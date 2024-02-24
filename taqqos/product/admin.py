@@ -74,6 +74,7 @@ class ProductAdmin(admin.ModelAdmin):
         "is_popular",
         "created_at"
     ]
+    prepopulated_fields = {"slug": ("name_uz", )}
     ordering = ("-updated_at",)
     search_fields = ["name_uz", "name_ru", "description_uz", "description_ru"]
     date_hierarchy = "created_at"
