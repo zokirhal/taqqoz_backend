@@ -122,6 +122,7 @@ class Option(models.Model):
 class Product(BaseDateModel):
     name_uz = models.CharField(_("название uzb"), max_length=200)
     name_ru = models.CharField(_("название rus"), max_length=200)
+    short_name = models.CharField(_("название короткое"), max_length=200, null=True, blank=True)
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,

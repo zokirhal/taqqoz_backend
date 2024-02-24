@@ -51,10 +51,10 @@ def match_product_price():
     for product in Product.objects.all():
         product.product_prices.clear()
         product_prices = ProductPrice.objects.filter(
-            Q(name__trigram_strict_word_similar=product.name_uz) | Q(name__trigram_strict_word_similar=product.name_ru)
+            name__icontains=product.short_name
         )
         if product_prices:
-            print(product.name_uz)
+            print(product.short_name)
             print(product_prices.values_list("name"))
             product.product_prices.add(*product_prices)
         product.save()
