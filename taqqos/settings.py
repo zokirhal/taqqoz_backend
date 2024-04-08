@@ -19,7 +19,7 @@ ENVIRONMENT = env("ENVIRONMENT", default="DEV")
 
 
 INSTALLED_APPS = [
-    'jazzmin',
+    # 'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'django_celery_results',
     'smart_selects',
-    "django_celery_beat",
+    'django_celery_beat',
 
     # django apps
     'taqqos.account',
@@ -259,3 +259,4 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_EAGER = True
 CELERY_ALWAYS_EAGER = True
+
