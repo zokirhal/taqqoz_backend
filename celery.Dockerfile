@@ -8,4 +8,4 @@ ADD requirements.txt /backend/
 RUN pip install -r requirements.txt
 ADD . /backend/
 
-CMD ["celery", "-A", "taqqos", "worker", "-l", "info"]
+CMD ["celery", "-A", "taqqos", "worker", "-B", "-l", "info"]

@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'ckeditor',
     'rest_framework_simplejwt.token_blacklist',
     'django_celery_results',
+    'smart_selects',
+    "django_celery_beat",
 
     # django apps
     'taqqos.account',

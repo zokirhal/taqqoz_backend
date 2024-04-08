@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel, TreeManyToManyField
 from ckeditor_uploader.fields import RichTextUploadingField
+from smart_selects.db_fields import ChainedForeignKey
 
 from taqqos.account.models import User
 # business app
@@ -213,13 +214,19 @@ class ProductAttribute(models.Model):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="attributes", verbose_name=_("продукт")
     )
-    option = models.ForeignKey(
-        Option,
-        on_delete=models.SET_NULL,
+    option = ChainedForeignKey(
+        Option, on_delete=models.SET_NULL,
         blank=True, null=True,
         related_name="product_attributes",
-        verbose_name=_("параметр")
+        chained_field="attribute",
+        chained_model_field="attribute",
+        show_all=False,
+        auto_choose=True,
+        sort=True
     )
+
+    def __str__(self):
+        return self.attribute.name_ru
 
     class Meta:
         verbose_name = _("продукт атрибут")

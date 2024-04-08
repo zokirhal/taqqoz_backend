@@ -94,6 +94,19 @@ class ProductAdmin(admin.ModelAdmin):
 
     file_tag.short_description = "краткий изображение"
 
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        product = obj
+        product.product_prices.clear()
+        product_prices = ProductPrice.objects.filter(
+            name__icontains=product.short_name
+        )
+        if product_prices:
+            print(product.short_name)
+            print(product_prices.values_list("name"))
+            product.product_prices.add(*product_prices)
+        product.save()
+
 
 class OptionAdmin(admin.StackedInline):
     model = Option

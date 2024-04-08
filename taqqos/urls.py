@@ -8,6 +8,7 @@ urlpatterns = doc_urls
 
 urlpatterns += [
     path('admin/', admin.site.urls),
+    path('chaining/', include('smart_selects.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('<version>/account/', include("taqqos.account.urls")),
     path('<version>/document/', include("taqqos.document.urls")),
