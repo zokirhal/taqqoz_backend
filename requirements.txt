@@ -20,5 +20,6 @@ gunicorn==21.2.0
 celery==5.3.6
 django-celery-results==2.5.1
 django-smart-selects==1.6.0
+django-select2==8.1.2
 django-celery-beat==2.6.0
 redis==5.0.1

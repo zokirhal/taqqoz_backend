@@ -42,7 +42,6 @@ def create_thumbnail_image(instance, size=(300, 300)):
     thumb_filename = (
         thumb_name + f"_thumb_{size[0]}_{size[1]}" + thumb_extension
     )
-
     if thumb_extension in [".jpg", ".jpeg", ".JPG"]:
         FTYPE = "JPEG"
     elif thumb_extension == ".gif":

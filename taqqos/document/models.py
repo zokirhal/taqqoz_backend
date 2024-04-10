@@ -22,14 +22,14 @@ FILE_TYPES = {
 
 
 def upload_name(instance, filename):
-    file_type = filename.split('.')[-1]
+    f_name, *args, file_type = filename.split('.')
     today = str(datetime.datetime.today())[0:7]
 
     for regex, folder in FILE_TYPES.items():
         try:
             RegexValidator(regex).__call__(file_type)
-            return 'file/%s/%s/%s.%s' % (
-                folder, today, uuid.uuid4(), file_type)
+            return '%s/%s/%s/%s.%s' % (
+                folder, today, uuid.uuid4(), f_name, file_type)
         except Error:
             pass
     raise ValidationError({
@@ -50,12 +50,17 @@ class File(BaseDateModel):
     file = models.FileField(_("файл"), upload_to=upload_name)
     file_type = models.CharField(_("тип файла"), max_length=30, choices=FILE_TYPES, null=True, blank=True)
     thumbnail = models.ImageField(
-        upload_to=upload_name, blank=True, null=True
+        blank=True, null=True
     )
 
     class Meta:
         verbose_name = "файл"
         verbose_name_plural = "файлы"
+
+    def save(self, *args, **kwargs):
+        if not self.name:
+            self.name = self.file.name
+        super(File, self).save(*args, **kwargs)
 
     @property
     def file_url(self):

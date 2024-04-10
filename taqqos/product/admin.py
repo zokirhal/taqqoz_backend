@@ -1,7 +1,10 @@
 from typing import Any
 
+from django import forms
+from django_select2 import forms as s2forms
 from django.contrib import admin
 from django.utils.safestring import mark_safe
+from django_select2.forms import Select2Widget
 from mptt.admin import DraggableMPTTAdmin
 
 from taqqos.product.models import (
@@ -19,6 +22,12 @@ from taqqos.product.models import (
     ReviewFile,
     Favourite, Slider, Seller,
 )
+
+
+class PhotoWidget(s2forms.ModelSelect2Widget):
+    search_fields = [
+        "name__icontains",
+    ]
 
 
 class ProductFeatureAdmin(admin.StackedInline):
@@ -39,8 +48,21 @@ class ProductVideoReviewAdmin(admin.StackedInline):
     extra = 1
 
 
+class ProductProductImageInlineForm(forms.ModelForm):
+    class Meta:
+        model = ProductImage
+        fields = (
+            "id",
+            'photo',
+        )
+        widgets = {
+            'photo': Select2Widget
+        }
+
+
 class ProductImageeAdmin(admin.StackedInline):
     model = ProductImage
+    form = ProductProductImageInlineForm
     list_display = (
         "id",
         "photo",
@@ -57,8 +79,27 @@ class ProductAttributeAdmin(admin.StackedInline):
     extra = 1
 
 
+class ProductPriceInlineAdmin(admin.TabularInline):
+    model = ProductPrice.products.through
+    list_display = (
+        "id",
+        "name"
+    )
+    extra = 1
+
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = "__all__"
+        widgets = {
+            'photo': Select2Widget
+        }
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    form = ProductForm
     list_display = (
         "id",
         "name_uz",
@@ -82,6 +123,7 @@ class ProductAdmin(admin.ModelAdmin):
         ProductImageeAdmin,
         ProductAttributeAdmin,
         ProductVideoReviewAdmin,
+        ProductPriceInlineAdmin
         # ProductFeatureAdmin,
     ]
 

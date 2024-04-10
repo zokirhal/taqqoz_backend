@@ -300,6 +300,9 @@ class ProductPrice(BaseDateModel):
         verbose_name_plural = _("цены на продукцию")
         unique_together = ("name", "website")
 
+    def __str__(self):
+        return self.name
+
 
 class Review(BaseDateModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews", verbose_name=_("пользователь"))
