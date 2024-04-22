@@ -12,7 +12,7 @@ from smart_selects.db_fields import ChainedForeignKey
 from taqqos.account.models import User
 # business app
 from taqqos.core.models import BaseDateModel
-from taqqos.document.models import File
+from taqqos.document.models import File, upload_name
 
 
 class Brand(MPTTModel):
@@ -141,9 +141,7 @@ class Product(BaseDateModel):
         blank=True,
         verbose_name=_("бренд"),
     )
-    photo = models.ForeignKey(
-        File, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("фото")
-    )
+    photo = models.ImageField(_("фото"), upload_to=upload_name, null=True, blank=True)
     is_popular = models.BooleanField(_("популярен"), default=False)
     views = models.PositiveIntegerField(_("Просмотры"), default=0)
     description_uz = RichTextUploadingField(_("описание uzb"))
@@ -196,13 +194,7 @@ class ProductImage(models.Model):
         related_name="images",
         verbose_name=_("продукт")
     )
-    photo = models.ForeignKey(
-        File,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name=_("фото")
-    )
+    photo = models.ImageField(_("фото"), upload_to=upload_name, null=True, blank=True)
 
     class Meta:
         verbose_name = _("фото продукта")

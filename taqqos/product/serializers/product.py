@@ -8,7 +8,6 @@ from taqqos.product.serializers.attribute import OptionSerializer, AttributeMini
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
-    photo = FileSerializer()
 
     class Meta:
         model = ProductImage
@@ -56,7 +55,6 @@ class ProductVideoReviewSerializer(serializers.ModelSerializer):
 
 
 class ProductPriceSerializer(serializers.ModelSerializer):
-    photo = FileSerializer()
 
     class Meta:
         model = ProductPrice
@@ -81,7 +79,6 @@ class ProductPriceSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
-    photo = FileSerializer()
 
     class Meta:
         model = Product
@@ -122,7 +119,6 @@ class ProductSerializer(serializers.ModelSerializer):
 class ProductDetailSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
-    photo = FileSerializer()
     images = ProductImageSerializer(many=True)
     attributes = ProductAttributeSerializer(many=True)
     video_reviews = ProductVideoReviewSerializer(many=True)
@@ -157,6 +153,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
     def get_description(self, instance: Product) -> str:
         return getattr(instance, f"description_{get_language()}")
+
 
 class ProductPriceCreateSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=512)

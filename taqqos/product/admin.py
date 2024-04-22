@@ -48,29 +48,13 @@ class ProductVideoReviewAdmin(admin.StackedInline):
     extra = 1
 
 
-class ProductProductImageInlineForm(forms.ModelForm):
-    class Meta:
-        model = ProductImage
-        fields = (
-            "id",
-            'photo',
-        )
-        widgets = {
-            'photo': Select2Widget
-        }
-
-
 class ProductImageeAdmin(admin.StackedInline):
     model = ProductImage
-    # form = ProductProductImageInlineForm
     list_display = (
         "id",
         "photo",
     )
-    extra = 0
-
-    def has_change_permission(self, *args, **kwargs):
-        return False
+    extra = 1
 
 
 class ProductAttributeAdmin(admin.StackedInline):
@@ -79,7 +63,7 @@ class ProductAttributeAdmin(admin.StackedInline):
         "id",
         "attribute",
     )
-    extra = 0
+    extra = 1
 
 
 class ProductPriceInlineAdmin(admin.TabularInline):
@@ -98,18 +82,8 @@ class ProductPriceInlineAdmin(admin.TabularInline):
         return qs.prefetch_related("product")
 
 
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = "__all__"
-        widgets = {
-            'photo': Select2Widget
-        }
-
-
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    # form = ProductForm
     list_display = (
         "id",
         "name_uz",
@@ -140,7 +114,7 @@ class ProductAdmin(admin.ModelAdmin):
     def file_tag(self, obj: Product) -> Any:
         if obj.photo:
             return mark_safe(
-                '<img src="{}" height="50"/>'.format(obj.photo.thumbnail.url)
+                '<img src="{}" height="50"/>'.format(obj.photo.url)
             )
         return None
 
