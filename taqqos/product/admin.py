@@ -62,12 +62,15 @@ class ProductProductImageInlineForm(forms.ModelForm):
 
 class ProductImageeAdmin(admin.StackedInline):
     model = ProductImage
-    form = ProductProductImageInlineForm
+    # form = ProductProductImageInlineForm
     list_display = (
         "id",
         "photo",
     )
-    extra = 1
+    extra = 0
+
+    def has_change_permission(self, *args, **kwargs):
+        return False
 
 
 class ProductAttributeAdmin(admin.StackedInline):
@@ -76,7 +79,7 @@ class ProductAttributeAdmin(admin.StackedInline):
         "id",
         "attribute",
     )
-    extra = 1
+    extra = 0
 
 
 class ProductPriceInlineAdmin(admin.TabularInline):
@@ -85,7 +88,10 @@ class ProductPriceInlineAdmin(admin.TabularInline):
         "id",
         "name"
     )
-    extra = 1
+    extra = 0
+
+    def has_change_permission(self, *args, **kwargs):
+        return False
 
 
 class ProductForm(forms.ModelForm):
@@ -99,7 +105,7 @@ class ProductForm(forms.ModelForm):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    form = ProductForm
+    # form = ProductForm
     list_display = (
         "id",
         "name_uz",
