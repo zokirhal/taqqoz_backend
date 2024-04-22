@@ -93,6 +93,10 @@ class ProductPriceInlineAdmin(admin.TabularInline):
     def has_change_permission(self, *args, **kwargs):
         return False
 
+    def get_queryset(self, request):
+        qs = super(ProductPriceInlineAdmin, self).get_queryset(request)
+        return qs.prefetch_related("product")
+
 
 class ProductForm(forms.ModelForm):
     class Meta:
