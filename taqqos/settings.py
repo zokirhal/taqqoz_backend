@@ -2,6 +2,9 @@ import os
 import environ
 from datetime import timedelta
 from pathlib import Path
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,6 +23,9 @@ ENVIRONMENT = env("ENVIRONMENT", default="DEV")
 
 INSTALLED_APPS = [
     # 'jazzmin',
+    "unfold",
+    "unfold.contrib.filters",
+    "unfold.contrib.forms",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -261,3 +267,140 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_EAGER = True
 CELERY_ALWAYS_EAGER = True
 
+UNFOLD = {
+    "SITE_TITLE": "Taqqoz",
+    "SITE_HEADER": "Taqqoz",
+    "SITE_URL": "https://taqqoz.uz",
+    # "SITE_ICON": lambda request: static("icon.svg"),  # both modes, optimise for 32px height
+    # "SITE_ICON": {
+    #     "light": lambda request: static("icon-light.svg"),  # light mode
+    #     "dark": lambda request: static("icon-dark.svg"),  # dark mode
+    # },
+    # "SITE_LOGO": lambda request: static("logo.svg"),  # both modes, optimise for 32px height
+    # "SITE_LOGO": {
+    #     "light": lambda request: static("logo-light.svg"),  # light mode
+    #     "dark": lambda request: static("logo-dark.svg"),  # dark mode
+    # },
+    "SITE_SYMBOL": "speed",  # symbol from icon set
+    "SHOW_HISTORY": False, # show/hide "History" button, default: True
+    "SHOW_VIEW_ON_SITE": True, # show/hide "View on site" button, default: True
+    "ENVIRONMENT": "core.utils.environment_callback",
+    "LOGIN": {
+        "image": lambda request: static("core/img/login-bg.jpg"),
+    },
+    "STYLES": [
+        lambda request: static("core/css/styles.css"),
+    ],
+    "SCRIPTS": [
+        #lambda request: static("js/script.js"),
+    ],
+    "COLORS": {
+        "primary": {
+            "50": "250 245 255",
+            "100": "243 232 255",
+            "200": "233 213 255",
+            "300": "216 180 254",
+            "400": "192 132 252",
+            "500": "168 85 247",
+            "600": "147 51 234",
+            "700": "126 34 206",
+            "800": "107 33 168",
+            "900": "88 28 135",
+            "950": "59 7 100",
+        },
+    },
+    "EXTENSIONS": {
+        "modeltranslation": {
+            "flags": {
+                "uz": "🇺🇿",
+                "ru": "🇷🇺",
+            },
+        },
+    },
+    "SIDEBAR": {
+        "show_search": False,
+        "show_all_applications": True,
+        "navigation": [
+            {
+                "title": _("Продукты и категории"),
+                "items": [
+
+                    {
+                        "title": _("Категории"),
+                        "icon": "category",
+                        "link": reverse_lazy("admin:product_category_changelist"),
+                    },
+                    {
+                        "title": _("Бренды"),
+                        "icon": "brand_awareness",
+                        "link": reverse_lazy("admin:product_brand_changelist"),
+                        # "badge": "formula.utils.badge_callback",
+                    },
+                    {
+                        "title": _("Атрибуты"),
+                        "icon": "edit_attributes",
+                        "link": reverse_lazy("admin:product_attribute_changelist"),
+                        "permission": lambda request: request.user.is_staff,
+                    },
+                    {
+                        "title": _("Продукты"),
+                        "icon": "smartphone",
+                        "link": reverse_lazy("admin:product_product_changelist"),
+                        "permission": lambda request: request.user.is_staff,
+                    },
+                    {
+                        "title": _("Цены на продукцию"),
+                        "icon": "sell",
+                        "link": reverse_lazy("admin:product_productprice_changelist"),
+                        "permission": lambda request: request.user.is_staff,
+                    },
+
+                ],
+            },
+            {
+                "separator": True,
+                "title": _("Файлы"),
+                "items": [
+                    {
+                        "title": _("Файлы"),
+                        "icon": "perm_media",
+                        "link": reverse_lazy("admin:document_file_changelist"),
+                    }
+                ]
+            },
+            {
+                "separator": True,
+                "title": _("Слидеры"),
+                "items": [
+                    {
+                        "title": _("Слидеры"),
+                        "icon": "sliders",
+                        "link": reverse_lazy("admin:product_slider_changelist"),
+                    },
+                    {
+                        "title": _("Продавцы"),
+                        "icon": "storefront",
+                        "link": reverse_lazy("admin:product_seller_changelist"),
+                    },
+                ],
+            },
+            {
+                "separator": True,
+                "title": _("Авторизация"),
+                "items": [
+                    {
+                        "title": _("Пользователи"),
+                        "icon": "person",
+                        "link": reverse_lazy("admin:account_user_changelist"),
+                    },
+                    {
+                        "title": _("Группы"),
+                        "icon": "group",
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                    },
+                ],
+            },
+        ],
+    },
+
+}

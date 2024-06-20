@@ -1,11 +1,9 @@
 from typing import Any
 
-from django import forms
 from django_select2 import forms as s2forms
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from django_select2.forms import Select2Widget
-from mptt.admin import DraggableMPTTAdmin
+from unfold.admin import ModelAdmin, TabularInline, StackedInline
 
 from taqqos.product.models import (
     Attribute,
@@ -30,7 +28,27 @@ class PhotoWidget(s2forms.ModelSelect2Widget):
     ]
 
 
-class ProductFeatureAdmin(admin.StackedInline):
+@admin.register(Brand)
+class BrandAdmin(ModelAdmin):
+    list_display = (
+        "id",
+        "name_uz",
+    )
+    search_fields = ["name_uz", "name_ru"]
+    list_display_links = ["id", "name_uz"]
+
+
+@admin.register(Category)
+class CategoryAdmin(ModelAdmin):
+    list_display = (
+        "id",
+        "name_uz",
+    )
+    search_fields = ["name_uz", "name_ru"]
+    list_display_links = ["id", "name_uz"]
+
+
+class ProductFeatureAdmin(StackedInline):
     model = ProductFeature
     list_display = (
         "id",
@@ -39,7 +57,7 @@ class ProductFeatureAdmin(admin.StackedInline):
     extra = 1
 
 
-class ProductVideoReviewAdmin(admin.StackedInline):
+class ProductVideoReviewAdmin(StackedInline):
     model = ProductVideoReview
     list_display = (
         "id",
@@ -48,7 +66,7 @@ class ProductVideoReviewAdmin(admin.StackedInline):
     extra = 1
 
 
-class ProductImageeAdmin(admin.StackedInline):
+class ProductImageeAdmin(TabularInline):
     model = ProductImage
     list_display = (
         "id",
@@ -57,7 +75,7 @@ class ProductImageeAdmin(admin.StackedInline):
     extra = 1
 
 
-class ProductAttributeAdmin(admin.StackedInline):
+class ProductAttributeAdmin(TabularInline):
     model = ProductAttribute
     list_display = (
         "id",
@@ -66,7 +84,7 @@ class ProductAttributeAdmin(admin.StackedInline):
     extra = 1
 
 
-class ProductPriceInlineAdmin(admin.TabularInline):
+class ProductPriceInlineAdmin(TabularInline):
     model = ProductPrice.products.through
     list_display = (
         "id",
@@ -83,16 +101,17 @@ class ProductPriceInlineAdmin(admin.TabularInline):
 
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(ModelAdmin):
+    autocomplete_fields = ["category", "brand"]
     list_display = (
         "id",
         "name_uz",
         "category",
         "brand",
         "is_popular",
-        "file_tag"
+        # "file_tag"
     )
-    list_display_links = ["id"]
+    list_display_links = ["id", "name_uz"]
     list_filter = [
         "brand",
         "category",
@@ -114,7 +133,7 @@ class ProductAdmin(admin.ModelAdmin):
     def file_tag(self, obj: Product) -> Any:
         if obj.photo:
             return mark_safe(
-                '<img src="{}" height="50"/>'.format(obj.photo.url)
+                '<img src="{}" height="50" weight="50"/>'.format(obj.photo.url)
             )
         return None
 
@@ -128,13 +147,11 @@ class ProductAdmin(admin.ModelAdmin):
             name__icontains=product.short_name
         )
         if product_prices:
-            print(product.short_name)
-            print(product_prices.values_list("name"))
             product.product_prices.add(*product_prices)
         product.save()
 
 
-class OptionAdmin(admin.StackedInline):
+class OptionAdmin(StackedInline):
     model = Option
     list_display = (
         "id",
@@ -144,7 +161,7 @@ class OptionAdmin(admin.StackedInline):
 
 
 @admin.register(Attribute)
-class AttributeAdmin(admin.ModelAdmin):
+class AttributeAdmin(ModelAdmin):
     list_display = (
         "id",
         "name_uz",
@@ -161,7 +178,7 @@ class AttributeAdmin(admin.ModelAdmin):
 
 
 @admin.register(ProductPrice)
-class ProductPriceAdmin(admin.ModelAdmin):
+class ProductPriceAdmin(ModelAdmin):
     list_display = (
         "id",
         "name",
@@ -173,7 +190,7 @@ class ProductPriceAdmin(admin.ModelAdmin):
         "website",
         "file_tag"
     )
-    list_display_links = ["id"]
+    list_display_links = ["id", "name"]
     list_filter = ["has_credit", "has_delivery", "website"]
     search_fields = ["name"]
 
@@ -187,30 +204,6 @@ class ProductPriceAdmin(admin.ModelAdmin):
     file_tag.short_description = "краткий изображение"
 
 
-admin.site.register(
-    Category,
-    DraggableMPTTAdmin,
-    list_display=(
-        "tree_actions",
-        "indented_title",
-        # ...more fields if you feel like it...
-    ),
-    list_display_links=("indented_title",),
-)
-
-
-admin.site.register(
-    Brand,
-    DraggableMPTTAdmin,
-    list_display=(
-        "tree_actions",
-        "indented_title",
-        # ...more fields if you feel like it...
-    ),
-    list_display_links=("indented_title",),
-)
-
-
 class ReviewFileAdmin(admin.StackedInline):
     model = ReviewFile
     list_display = (
@@ -221,7 +214,7 @@ class ReviewFileAdmin(admin.StackedInline):
 
 
 @admin.register(Review)
-class ReviewAdmin(admin.ModelAdmin):
+class ReviewAdmin(ModelAdmin):
     list_display = (
         "id",
         "user",
@@ -236,7 +229,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 
 @admin.register(Favourite)
-class FavouriteAdmin(admin.ModelAdmin):
+class FavouriteAdmin(ModelAdmin):
     list_display = (
         "id",
         "user",
@@ -246,7 +239,7 @@ class FavouriteAdmin(admin.ModelAdmin):
 
 
 @admin.register(Slider)
-class SliderAdmin(admin.ModelAdmin):
+class SliderAdmin(ModelAdmin):
     list_display = (
         "id",
         "image",
@@ -254,7 +247,7 @@ class SliderAdmin(admin.ModelAdmin):
 
 
 @admin.register(Seller)
-class SellerAdmin(admin.ModelAdmin):
+class SellerAdmin(ModelAdmin):
     list_display = (
         "id",
         "image",

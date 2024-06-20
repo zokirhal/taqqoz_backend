@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext as _
+from unfold.admin import ModelAdmin
 
 from taqqos.account.models import User
 
 
 @admin.register(User)
-class UserAdmin(BaseUserAdmin):
+class UserAdmin(BaseUserAdmin, ModelAdmin):
     list_display = (
         "id", "phone_number", "full_name", "is_staff", "is_active", "is_superuser", "date_joined",
     )

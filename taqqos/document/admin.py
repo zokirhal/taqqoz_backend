@@ -4,13 +4,14 @@ from typing import Any
 from django.contrib import admin
 from django.db import transaction
 from django.utils.safestring import mark_safe
+from unfold.admin import ModelAdmin
 
 from taqqos.document.models import File, FILE_TYPES
 from taqqos.document.services import create_video_preview, create_thumbnail_image
 
 
 @admin.register(File)
-class FileAdmin(admin.ModelAdmin):
+class FileAdmin(ModelAdmin):
     list_display = ["id", "name", "file_type", "file", "file_tag"]
     list_filter = ["file_type", 'created_at']
     readonly_fields = ["thumbnail", "file_type"]
@@ -18,7 +19,7 @@ class FileAdmin(admin.ModelAdmin):
     def file_tag(self, obj: File) -> Any:
         if obj.thumbnail:
             return mark_safe(
-                '<img src="{}" height="50"/>'.format(obj.thumbnail.url)
+                '<img src="{}" height="50" weight="50"/>'.format(obj.thumbnail.url)
             )
         return None
 
