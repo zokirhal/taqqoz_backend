@@ -85,12 +85,13 @@ class ProductAttributeAdmin(TabularInline):
 
 
 class ProductPriceInlineAdmin(TabularInline):
-    model = ProductPrice.products.through
+    model = Product.product_prices.through
     list_display = (
         "id",
         "name"
     )
     extra = 0
+    autocomplete_fields = ["productprice"]
 
     def has_change_permission(self, *args, **kwargs):
         return False
@@ -102,7 +103,7 @@ class ProductPriceInlineAdmin(TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(ModelAdmin):
-    autocomplete_fields = ["category", "brand"]
+    autocomplete_fields = ["category", "brand", "product_prices"]
     list_display = (
         "id",
         "name_uz",
