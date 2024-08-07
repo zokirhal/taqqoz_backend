@@ -1,6 +1,7 @@
 import requests
-from django.core.files.base import ContentFile
 from django.db import transaction
+from django.core.files.base import ContentFile
+from django.contrib.postgres.search import TrigramSimilarity
 
 from taqqos.celery import app
 from taqqos.document.models import File
@@ -25,21 +26,33 @@ def create_product_price(
             )
         )
         if photo:
-            r = requests.get(photo)
-            if r.status_code == 200:
-                filename = photo.split('/')[-1]
-                if website == "Mediapark":
-                    filename = filename.split("&")[0]
-                file = File(
-                    name=filename,
-                    file_type=File.IMAGE
-                )
-                file.file.save(filename, ContentFile(r.content))
-                file.save()
-                create_thumbnail_image(file)
-                product_price.photo = file
-                product_price.save()
-        products = Product.objects.filter(name_ru__trigram_strict_word_similar=name)
+            product_price.image_url = photo
+            product_price.save()
+            try:
+                r = requests.get(photo, verify=False)
+                if r.status_code == 200:
+                    filename = photo.split('/')[-1]
+                    if website == "Mediapark":
+                        filename = filename.split("&")[0]
+                    file = File(
+                        name=filename,
+                        file_type=File.IMAGE
+                    )
+                    file.file.save(filename, ContentFile(r.content))
+                    file.save()
+                    create_thumbnail_image(file)
+                    product_price.photo = file
+                    product_price.save()
+            except Exception as e:
+                print(e)
+        # products = Product.objects.filter(name_ru__trigram_strict_word_similar=name)
+        products = Product.objects.annotate(
+            similarity=TrigramSimilarity('name_ru', name)
+        ).filter(similarity__gt=0.3).order_by('-similarity')
         if products:
+            print("There is some products man")
             product_price.products.add(*products)
+            product_price.save()
+        else:
+            print("No any products bro, but saved anyway")
             product_price.save()

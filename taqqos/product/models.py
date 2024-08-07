@@ -207,14 +207,16 @@ class ProductAttribute(models.Model):
         Product, on_delete=models.CASCADE, related_name="attributes", verbose_name=_("продукт")
     )
     option = ChainedForeignKey(
-        Option, on_delete=models.SET_NULL,
-        blank=True, null=True,
-        related_name="product_attributes",
+        Option,
         chained_field="attribute",
         chained_model_field="attribute",
         show_all=False,
         auto_choose=True,
-        sort=True
+        sort=True,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="product_attributes"
     )
 
     def __str__(self):
@@ -267,6 +269,7 @@ class ProductPrice(BaseDateModel):
     price_amount = models.DecimalField(_("сумма цены"), decimal_places=2, max_digits=18)
     description = models.TextField(_("описание"), null=True, blank=True)
     features = models.JSONField(_("характеристика"), null=True, blank=True)
+    image_url = models.URLField("Image url", null=True, blank=True)
     photo = models.ForeignKey(
         File,
         on_delete=models.SET_NULL,
@@ -276,13 +279,13 @@ class ProductPrice(BaseDateModel):
     )
 
     has_credit = models.BooleanField(_("есть кредит"), default=False)
-    credit_monthly_amount = models.CharField(_("ежемесячная сумма кредита"), null=True, blank=True)
+    credit_monthly_amount = models.CharField(_("ежемесячная сумма кредита"), max_length=150, null=True, blank=True)
 
     has_delivery = models.BooleanField(_("есть доставка"), default=False)
     delivery_info = models.TextField(_("информация о доставке"), null=True, blank=True)
 
     address = models.TextField(_("адрес"), null=True, blank=True)
-    phone_number = models.CharField(_("номер телефона"), null=True, blank=True)
+    phone_number = models.CharField(_("номер телефона"), max_length=150, null=True, blank=True)
 
     website = models.CharField(_("Веб-сайт"), max_length=256)
     website_link = models.URLField(_("ссылка на сайт"), null=True, blank=True)

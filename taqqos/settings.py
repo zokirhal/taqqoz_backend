@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
-env.read_env(os.path.join(BASE_DIR, ".env"))
+env.read_env(os.path.join(BASE_DIR, ".env"), overwrite=True)
 
 SECRET_KEY = env("SECRET_KEY")
 
@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django_celery_results',
     'smart_selects',
     'django_select2',
+    'dal', # new
+    'dal_select2', # new
     'django_celery_beat',
 
     # django apps
@@ -94,6 +96,13 @@ WSGI_APPLICATION = 'taqqos.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    #     'OPTIONS': {
+    #         'timeout': 20,  # Увеличение тайм-аута
+    #     }
+    # }
     "default": {
         "ENGINE": env("DB_ENGINE"),
         "NAME": env("DB_DATABASE"),
@@ -166,6 +175,9 @@ PARLER_DEFAULT_ACTIVATE = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -402,5 +414,8 @@ UNFOLD = {
             },
         ],
     },
-
 }
+
+if DEBUG:
+    GDAL_LIBRARY_PATH = r'env\Lib\site-packages\osgeo\gdal.dll'
+    GEOS_LIBRARY_PATH = r'env\Lib\site-packages\osgeo\geos_c.dll'

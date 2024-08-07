@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from unfold.admin import ModelAdmin, TabularInline, StackedInline
 
+from .forms import ProductAttributeForm
 from taqqos.product.models import (
     Attribute,
     Category,
@@ -77,9 +78,11 @@ class ProductImageeAdmin(TabularInline):
 
 class ProductAttributeAdmin(TabularInline):
     model = ProductAttribute
+    form = ProductAttributeForm
     list_display = (
         "id",
         "attribute",
+        "option",
     )
     extra = 1
 
@@ -189,17 +192,23 @@ class ProductPriceAdmin(ModelAdmin):
         "address",
         "phone_number",
         "website",
-        "file_tag"
+        "file_tag",
     )
     list_display_links = ["id", "name"]
     list_filter = ["has_credit", "has_delivery", "website"]
     search_fields = ["name"]
 
-    def file_tag(self, obj: Product) -> Any:
+    def file_tag(self, obj: ProductPrice) -> Any:
         if obj.photo:
             return mark_safe(
                 '<img src="{}" height="50"/>'.format(obj.photo.thumbnail.url)
             )
+        
+        elif obj.image_url:
+            return mark_safe(
+                '<img src="{}" height="50"/>'.format(obj.image_url)
+            )
+        
         return None
 
     file_tag.short_description = "краткий изображение"

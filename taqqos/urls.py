@@ -3,12 +3,15 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from .product.views.product import OptionAutocomplete
+
 from taqqos.core.swagger import urlpatterns as doc_urls
 urlpatterns = doc_urls
 
 urlpatterns += [
     path('admin/', admin.site.urls),
     path('chaining/', include('smart_selects.urls')),
+    path('option-autocomplete/', OptionAutocomplete.as_view(), name='option-autocomplete'),
     path("select2/", include("django_select2.urls")),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('<version>/account/', include("taqqos.account.urls")),

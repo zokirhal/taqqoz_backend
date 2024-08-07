@@ -13,6 +13,24 @@ from taqqos.product.serializers.product import ProductSerializer, ProductPriceSe
     ProductDetailSerializer
 from taqqos.product.services import create_product_price
 
+from dal import autocomplete
+from ..models import Option
+
+
+class OptionAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Option.objects.none()
+
+        qs = Option.objects.all()
+
+        attribute = self.forwarded.get('attribute', None)
+
+        if attribute:
+            qs = qs.filter(attribute_id=attribute)
+
+        return qs
+
 
 class ProductViewSet(ReadOnlyModelViewSet):
     queryset = Product.objects.all().order_by("-created_at")
