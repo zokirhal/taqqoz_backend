@@ -416,6 +416,6 @@ UNFOLD = {
     },
 }
 
-if DEBUG:
-    GDAL_LIBRARY_PATH = r'env\Lib\site-packages\osgeo\gdal.dll'
-    GEOS_LIBRARY_PATH = r'env\Lib\site-packages\osgeo\geos_c.dll'
+# if DEBUG:
+#     GDAL_LIBRARY_PATH = r'env\Lib\site-packages\osgeo\gdal.dll'
+#     GEOS_LIBRARY_PATH = r'env\Lib\site-packages\osgeo\geos_c.dll'
