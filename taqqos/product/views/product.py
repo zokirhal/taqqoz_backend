@@ -9,8 +9,12 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from taqqos.product.filters import ProductFilter, ProductPriceFilter, CustomOrderFilter
 from taqqos.product.models import Product, ProductPrice, ProductAttribute, Attribute
-from taqqos.product.serializers.product import ProductSerializer, ProductPriceSerializer, ProductPriceCreateSerializer, \
-    ProductDetailSerializer
+from taqqos.product.serializers.product import (
+    ProductSerializer,
+    ProductPriceSerializer,
+    ProductPriceCreateSerializer,
+    ProductDetailSerializer,
+)
 from taqqos.product.services import create_product_price
 
 from dal import autocomplete
@@ -24,7 +28,7 @@ class OptionAutocomplete(autocomplete.Select2QuerySetView):
 
         qs = Option.objects.all()
 
-        attribute = self.forwarded.get('attribute', None)
+        attribute = self.forwarded.get("attribute", None)
 
         if attribute:
             qs = qs.filter(attribute_id=attribute)
@@ -35,11 +39,7 @@ class OptionAutocomplete(autocomplete.Select2QuerySetView):
 class ProductViewSet(ReadOnlyModelViewSet):
     queryset = Product.objects.all().order_by("-created_at")
     serializer_class = ProductSerializer
-    filter_backends = [
-        DjangoFilterBackend,
-        SearchFilter,
-        CustomOrderFilter
-    ]
+    filter_backends = [DjangoFilterBackend, SearchFilter, CustomOrderFilter]
     filterset_class = ProductFilter
     search_fields = ("name_uz", "name_ru")
     ordering_fields = ("price", "is_popular", "views", "id", "created_at")
@@ -48,7 +48,11 @@ class ProductViewSet(ReadOnlyModelViewSet):
     def get_queryset(self):
         qs = self.filter_queryset(self.queryset)
         query_params = dict(self.request.query_params)
-        excluding_fields = self.filterset_class.Meta.fields + ("page", "page_size", "ordering")
+        excluding_fields = self.filterset_class.Meta.fields + (
+            "page",
+            "page_size",
+            "ordering",
+        )
         for field in excluding_fields:
             query_params.pop(field, "")
         product_attributes = []
@@ -59,9 +63,7 @@ class ProductViewSet(ReadOnlyModelViewSet):
                 continue
             if attribute.type == Attribute.TEXT:
                 min_val, max_val = val.split(",")
-                p_atts = ProductAttribute.objects.filter(
-                    attribute=attribute
-                )
+                p_atts = ProductAttribute.objects.filter(attribute=attribute)
                 if max_val and min_val:
                     p_atts = p_atts.filter(
                         Q(option__value__gte=min_val) & Q(option__value__lte=max_val)
@@ -72,7 +74,9 @@ class ProductViewSet(ReadOnlyModelViewSet):
                     p_atts = p_atts.filter(option__value__lte=max_val)
             else:
                 values = val.split(",") if "," in val else [val]
-                p_atts = ProductAttribute.objects.filter(attribute=attribute, option__value__in=values)
+                p_atts = ProductAttribute.objects.filter(
+                    attribute=attribute, option__value__in=values
+                )
             if p_atts:
                 product_attributes.extend(p_atts)
         if product_attributes:

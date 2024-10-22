@@ -10,20 +10,13 @@ from taqqos.product.models import ProductPrice, Product
 
 
 @app.task
-def create_product_price(
-        data: dict,
-        *args, **kwargs
-) -> None:
+def create_product_price(data: dict, *args, **kwargs) -> None:
     with transaction.atomic():
         name = data.pop("name")
         website = data.pop("website")
         photo = data.pop("photo")
         product_price, _ = ProductPrice.objects.update_or_create(
-            name=name,
-            website=website,
-            defaults=dict(
-                **data
-            )
+            name=name, website=website, defaults=dict(**data)
         )
         if photo:
             product_price.image_url = photo
@@ -47,12 +40,22 @@ def create_product_price(
             except Exception as e:
                 print(e)
         # products = Product.objects.filter(name_ru__trigram_strict_word_similar=name)
-        products = Product.objects.annotate(
-            similarity=TrigramSimilarity('name_ru', name)
-        ).filter(similarity__gt=0.5).order_by('-similarity')
-        if products:
+        products = Product.objects.filter(name_ru__isnull=False)
+
+        matched_products = []
+        for product in products:
+            product_name_words = product.name_ru.lower().split(" ")
+            every_word_in_name = True
+            for word in product_name_words:
+                if word not in name.lower():
+                    every_word_in_name = False
+            if every_word_in_name:
+                matched_products.append(product)
+                print(product.name_ru)
+
+        if matched_products:
             print("There is some products man")
-            product_price.products.add(*products)
+            product_price.products.add(*matched_products)
             product_price.save()
         else:
             print("No any products bro, but saved anyway")

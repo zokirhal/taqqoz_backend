@@ -19,7 +19,9 @@ from taqqos.product.models import (
     ProductImage,
     Review,
     ReviewFile,
-    Favourite, Slider, Seller,
+    Favourite,
+    Slider,
+    Seller,
 )
 
 
@@ -45,6 +47,7 @@ class CategoryAdmin(ModelAdmin):
         "id",
         "name_uz",
     )
+    exclude = ("icon",)
     search_fields = ["name_uz", "name_ru"]
     list_display_links = ["id", "name_uz"]
 
@@ -89,10 +92,7 @@ class ProductAttributeAdmin(TabularInline):
 
 class ProductPriceInlineAdmin(TabularInline):
     model = Product.product_prices.through
-    list_display = (
-        "id",
-        "name"
-    )
+    list_display = ("id", "name")
     extra = 0
     autocomplete_fields = ["productprice"]
 
@@ -116,13 +116,8 @@ class ProductAdmin(ModelAdmin):
         # "file_tag"
     )
     list_display_links = ["id", "name_uz"]
-    list_filter = [
-        "brand",
-        "category",
-        "is_popular",
-        "created_at"
-    ]
-    prepopulated_fields = {"slug": ("name_uz", )}
+    list_filter = ["brand", "category", "is_popular", "created_at"]
+    prepopulated_fields = {"slug": ("name_uz",)}
     ordering = ("-updated_at",)
     search_fields = ["name_uz", "name_ru", "description_uz", "description_ru"]
     date_hierarchy = "created_at"
@@ -130,7 +125,7 @@ class ProductAdmin(ModelAdmin):
         ProductImageeAdmin,
         ProductAttributeAdmin,
         ProductVideoReviewAdmin,
-        ProductPriceInlineAdmin
+        ProductPriceInlineAdmin,
         # ProductFeatureAdmin,
     ]
 
@@ -145,21 +140,19 @@ class ProductAdmin(ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        product = obj
-        product.product_prices.clear()
-        product_prices = ProductPrice.objects.filter(
-            name__icontains=product.short_name
-        )
-        if product_prices:
-            product.product_prices.add(*product_prices)
-        product.save()
+        # product = obj
+        # product.product_prices.clear()
+        # product_prices = ProductPrice.objects.filter(name__icontains=product.short_name)
+        # if product_prices:
+        #     product.product_prices.add(*product_prices)
+        # product.save()
 
 
 class OptionAdmin(StackedInline):
     model = Option
     list_display = (
         "id",
-        "name_uz",
+        "name_uzbek",
     )
     extra = 1
 
@@ -174,7 +167,11 @@ class AttributeAdmin(ModelAdmin):
         "is_required",
     )
     list_display_links = ["id"]
-    list_filter = ["type", "categories", "is_required", ]
+    list_filter = [
+        "type",
+        "categories",
+        "is_required",
+    ]
     search_fields = ["name_uz", "name_ru"]
     inlines = [
         OptionAdmin,
@@ -192,26 +189,26 @@ class ProductPriceAdmin(ModelAdmin):
         "address",
         "phone_number",
         "website",
-        "file_tag",
+        # "file_tag",
     )
+    exclude = ("photo",)
+
     list_display_links = ["id", "name"]
     list_filter = ["has_credit", "has_delivery", "website"]
     search_fields = ["name"]
 
-    def file_tag(self, obj: ProductPrice) -> Any:
-        if obj.photo:
-            return mark_safe(
-                '<img src="{}" height="50"/>'.format(obj.photo.thumbnail.url)
-            )
-        
-        elif obj.image_url:
-            return mark_safe(
-                '<img src="{}" height="50"/>'.format(obj.image_url)
-            )
-        
-        return None
+    # def file_tag(self, obj: ProductPrice) -> Any:
+    #     if obj.photo:
+    #         return mark_safe(
+    #             '<img src="{}" height="50"/>'.format(obj.photo.thumbnail.url)
+    #         )
 
-    file_tag.short_description = "краткий изображение"
+    #     elif obj.image_url:
+    #         return mark_safe('<img src="{}" height="50"/>'.format(obj.image_url))
+
+    #     return None
+
+    # file_tag.short_description = "краткий изображение"
 
 
 class ReviewFileAdmin(admin.StackedInline):
@@ -225,14 +222,7 @@ class ReviewFileAdmin(admin.StackedInline):
 
 @admin.register(Review)
 class ReviewAdmin(ModelAdmin):
-    list_display = (
-        "id",
-        "user",
-        "product",
-        "rate",
-        "text",
-        "created_at"
-    )
+    list_display = ("id", "user", "product", "rate", "text", "created_at")
     list_filter = ["rate"]
     search_fields = ["text"]
     inlines = [ReviewFileAdmin]
@@ -240,12 +230,7 @@ class ReviewAdmin(ModelAdmin):
 
 @admin.register(Favourite)
 class FavouriteAdmin(ModelAdmin):
-    list_display = (
-        "id",
-        "user",
-        "product",
-        "created_at"
-    )
+    list_display = ("id", "user", "product", "created_at")
 
 
 @admin.register(Slider)
