@@ -139,13 +139,27 @@ class ProductAdmin(ModelAdmin):
     file_tag.short_description = "краткий изображение"
 
     def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-        # product = obj
-        # product.product_prices.clear()
-        # product_prices = ProductPrice.objects.filter(name__icontains=product.short_name)
-        # if product_prices:
-        #     product.product_prices.add(*product_prices)
-        # product.save()
+        if change:
+            print("updating a product")
+            super().save_model(request, obj, form, change)
+        else:
+            print("creating a product")
+            super().save_model(request, obj, form, change)
+
+            product = obj
+            matched_product_prices = []
+            for product_price in ProductPrice.objects.all():
+                product_name_words = product.name_ru.lower().split(" ")
+                every_word_in_name = True
+                for word in product_name_words:
+                    if word not in product_price.name.lower():
+                        every_word_in_name = False
+                if every_word_in_name:
+                    matched_product_prices.append(product_price)
+
+            if matched_product_prices:
+                product.product_prices.add(*matched_product_prices)
+                product.save()
 
 
 class OptionAdmin(StackedInline):
