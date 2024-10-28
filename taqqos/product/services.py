@@ -40,18 +40,18 @@ def create_product_price(data: dict, *args, **kwargs) -> None:
             except Exception as e:
                 print(e)
         # products = Product.objects.filter(name_ru__trigram_strict_word_similar=name)
-        products = Product.objects.filter(name_ru__isnull=False)
+        products = Product.objects.all()
 
         matched_products = []
         for product in products:
-            product_name_words = product.name_ru.lower().split(" ")
+            product_name_words = product.short_name.lower().split(" ")
             every_word_in_name = True
             for word in product_name_words:
                 if word not in name.lower():
                     every_word_in_name = False
             if every_word_in_name:
                 matched_products.append(product)
-                print(product.name_ru)
+                print(product.short_name)
 
         if matched_products:
             print("There is some products man")

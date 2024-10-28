@@ -149,7 +149,7 @@ class ProductAdmin(ModelAdmin):
             product = obj
             matched_product_prices = []
             for product_price in ProductPrice.objects.all():
-                product_name_words = product.name_ru.lower().split(" ")
+                product_name_words = product.short_name.lower().split(" ")
                 every_word_in_name = True
                 for word in product_name_words:
                     if word not in product_price.name.lower():
